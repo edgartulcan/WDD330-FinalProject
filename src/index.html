@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/pokeball.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/js/main.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Pokedex</title>
+</head>
+
+<body>
+    <header class="flex justify-between items-center p-5 bg-darkred text-white font-bold">
+        <a href="index.html" class=" flex items-center  text-2xl justify-center gap-0.5">
+            <p>P</p>
+            <img src="/pokeball.png" alt="pokeball" loading="lazy" class="w-6 h-6">
+            <p>kedex</p>
+        </a>
+        <nav class="">
+            <ul class="flex gap-5">
+                <li><a href="/categories/index.html" class="font-bold hover:text-white/90">Categories</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="p-5">
+        <h2 class="text-center font-bold text-2xl">Pokemon</h2>
+        <section class="Pokemon_List grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        </section>
+    </main>
+    <footer class="flex justify-center items-center p-5 bg-darkred text-white font-bold text-2xl">
+        <p class="text-center">Marvin Canastuj - 2026</p>
+    </footer>
+</body>
+
+</html>
