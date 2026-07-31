@@ -1,70 +1,106 @@
-import { showToastWithPhrase } from "./toast"
+import { fetchPokemonBatch, createPokemonCard, POKEMON_COUNT, grid } from './shared.js'
+import { toggleFavorite, isFavorite, renderFavorites } from './favorites.js'
+import { initCompare } from './compare.js'
+import './search.js'
 
-showToastWithPhrase()
+const PER_PAGE = 20
+const TOTAL_PAGES = Math.ceil(POKEMON_COUNT / PER_PAGE)
+let currentPage = 1
 
-let pokemonList = document.querySelector(".Pokemon_List")
+const randomBtn = document.getElementById('random-btn')
+const navCompare = document.getElementById('nav-compare')
+const navFavorites = document.getElementById('nav-favorites')
+const compareSection = document.getElementById('compare-section')
+const favoritesSection = document.getElementById('favorites-section')
+const pokemonListSection = document.getElementById('pokemon-list')
+const searchSection = document.getElementById('search-section')
+const paginationEl = document.getElementById('pagination')
 
-let popup = document.getElementById("pokemon-popup")
-if (!popup) {
-    popup = document.createElement("div")
-    popup.className = "fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50"
-    popup.id = "pokemon-popup"
-    document.body.appendChild(popup)
-}
+async function loadPage(page) {
+    currentPage = page
+    console.log('Loading page:', page)
+    grid.innerHTML = '<p style="text-align:center;grid-column:1/-1">Loading Pokémon...</p>'
 
+    const start = (page - 1) * PER_PAGE + 1
+    const end = Math.min(start + PER_PAGE - 1, POKEMON_COUNT)
+    const ids = []
+    for (let i = start; i <= end; i++) ids.push(i)
 
-for (let i = 1; i <= 151; i++) {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
-        .then(response => response.json())
-        .then(data => showPokemon(data))
-}
-
-function showPokemon(data) {
-    const article = document.createElement("article")
-    article.className = "flex flex-col justify-center items-center p-5 shadow rounded-lg gap-5 hover:ring-1 ring-gray-300 cursor-pointer"
-    article.innerHTML = `
-        <img src="${data.sprites.other["official-artwork"].front_default}" alt="img" loading="lazy">
-        <p class="font-bold">${data.name.toUpperCase()}</p>
-    `
-
-    article.addEventListener("click", () => {
-        fetchAndOpenPopup(data.name)
+    const pokemonList = await fetchPokemonBatch(ids)
+    grid.innerHTML = ''
+    pokemonList.forEach(data => {
+        const card = createPokemonCard(data)
+        const favBtn = document.createElement('button')
+        favBtn.className = 'fav-btn'
+        favBtn.textContent = isFavorite(data.id) ? '❤️' : '🤍'
+        favBtn.addEventListener('click', (e) => {
+            e.stopPropagation()
+            toggleFavorite(data.id)
+            favBtn.textContent = isFavorite(data.id) ? '❤️' : '🤍'
+        })
+        card.appendChild(favBtn)
+        grid.appendChild(card)
     })
 
-    pokemonList.appendChild(article)
+    renderPagination()
 }
 
-function fetchAndOpenPopup(pokemonName) {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-        .then(response => response.json())
-        .then(data => openPopup(data))
-}
+function renderPagination() {
+    paginationEl.innerHTML = ''
 
-function openPopup(data) {
-    let categories = data.types.map(type => `<p class="bg-mustardYellow px-3 py-2 rounded-lg font-bold">${type.type.name}</p>`).join("")
-    let stats = data.stats.map(stat => `<p class="text-sm"><strong>${stat.stat.name.toUpperCase()}:</strong> ${stat.base_stat}</p>`).join("")
+    const prevBtn = document.createElement('button')
+    prevBtn.textContent = '« Prev'
+    prevBtn.disabled = currentPage === 1
+    prevBtn.addEventListener('click', () => loadPage(currentPage - 1))
+    paginationEl.appendChild(prevBtn)
 
-    popup.innerHTML = `
-        <div class="bg-white p-8 rounded-xl max-w-sm w-full flex flex-col items-center relative shadow-2xl mx-4 animate-fade-in">
-            <button id="close-popup" class="absolute top-3 right-3 text-gray-500 hover:text-black font-bold text-xl">✕</button>
-            <img class="w-48 h-48" src="${data.sprites.other["official-artwork"].front_default}" alt="${data.name}">
-            <h2 class="text-2xl font-bold my-2">${data.name.toUpperCase()}</h2>
-            <div class="flex gap-3 my-2">${categories}</div>
-            <div class="w-full bg-gray-100 p-4 rounded-lg mt-3">
-                <h3 class="font-bold border-b pb-1 mb-2">Estadísticas:</h3>
-                ${stats}
-            </div>
-        </div>
-    `
-    popup.classList.remove("hidden")
-
-    popup.querySelector("#close-popup").addEventListener("click", () => {
-        popup.classList.add("hidden")
-    })
-}
-
-popup.addEventListener("click", (e) => {
-    if (e.target === popup) {
-        popup.classList.add("hidden")
+    for (let i = 1; i <= TOTAL_PAGES; i++) {
+        const btn = document.createElement('button')
+        btn.textContent = i
+        btn.className = i === currentPage ? 'active-page' : ''
+        btn.addEventListener('click', () => loadPage(i))
+        paginationEl.appendChild(btn)
     }
+
+    const nextBtn = document.createElement('button')
+    nextBtn.textContent = 'Next »'
+    nextBtn.disabled = currentPage === TOTAL_PAGES
+    nextBtn.addEventListener('click', () => loadPage(currentPage + 1))
+    paginationEl.appendChild(nextBtn)
+}
+
+function showSection(section) {
+    pokemonListSection.classList.toggle('hidden', section !== 'home')
+    searchSection.classList.toggle('hidden', section !== 'home')
+    compareSection.classList.toggle('hidden', section !== 'compare')
+    favoritesSection.classList.toggle('hidden', section !== 'favorites')
+    paginationEl.classList.toggle('hidden', section !== 'home')
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'))
+}
+
+randomBtn.addEventListener('click', () => {
+    const id = Math.floor(Math.random() * POKEMON_COUNT) + 1
+    window.location.href = `pages/details.html?id=${id}`
 })
+
+navCompare.addEventListener('click', (e) => {
+    e.preventDefault()
+    showSection('compare')
+    initCompare()
+})
+
+navFavorites.addEventListener('click', (e) => {
+    e.preventDefault()
+    showSection('favorites')
+    renderFavorites()
+})
+
+const homeLink = document.querySelector('nav a[href="index.html"]')
+if (homeLink) {
+    homeLink.addEventListener('click', (e) => {
+        e.preventDefault()
+        showSection('home')
+    })
+}
+
+loadPage(1)

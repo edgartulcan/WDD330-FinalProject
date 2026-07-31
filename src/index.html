@@ -1,36 +1,75 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/pokeball.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="/js/main.js"></script>
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Pokedex</title>
+    <title>Pokémon Battle Companion</title>
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="js/main.js"></script>
 </head>
-
 <body>
-    <header class="flex justify-between items-center p-5 bg-darkred text-white font-bold">
-        <a href="index.html" class=" flex items-center  text-2xl justify-center gap-0.5">
-            <p>P</p>
-            <img src="images/pokeball.png" alt="pokeball" loading="lazy" class="w-6 h-6">
-            <p>kedex</p>
-        </a>
-        <nav class="">
-            <ul class="flex gap-5">
-                <li><a href="categories/index.html" class="font-bold hover:text-white/90">Categories</a></li>
-            </ul>
-        </nav>
+    <header>
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Poké Ball" />
+                <span>Pokédex</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="#" id="nav-compare">Compare</a></li>
+                    <li><a href="#" id="nav-favorites">Favorites</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
-    <main class="p-5">
-        <h2 class="text-center font-bold text-2xl">Pokemon</h2>
-        <section class="Pokemon_List grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+
+    <main class="container">
+        <section id="search-section">
+            <h1>Pokémon Battle Companion</h1>
+            <p class="subtitle">Search, compare, and explore Pokémon data</p>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search Pokémon by name..." />
+                <button id="search-btn">Search</button>
+            </div>
+            <button id="random-btn">Random Pokémon</button>
+        </section>
+
+        <section id="pokemon-list">
+            <h2>Pokémon</h2>
+            <div id="pokemon-grid"></div>
+            <div id="pagination" class="pagination"></div>
+        </section>
+
+        <section id="compare-section" class="hidden">
+            <h2>Compare Pokémon</h2>
+            <div class="compare-selectors">
+                <div class="compare-slot">
+                    <input type="text" id="compare-input-1" placeholder="Pokémon #1" />
+                    <div class="compare-result" id="compare-result-1"></div>
+                </div>
+                <div class="compare-slot">
+                    <input type="text" id="compare-input-2" placeholder="Pokémon #2" />
+                    <div class="compare-result" id="compare-result-2"></div>
+                </div>
+            </div>
+            <div id="compare-display"></div>
+        </section>
+
+        <section id="favorites-section" class="hidden">
+            <h2>Your Favorites</h2>
+            <div id="favorites-grid"></div>
         </section>
     </main>
-    <footer class="flex justify-center items-center p-5 bg-darkred text-white font-bold text-2xl">
-        <p class="text-center">Edgar Tulcan - 2026</p>
+
+    <footer>
+        <div class="container">
+            <p>Edgar Tulcan — 2026</p>
+        </div>
     </footer>
 </body>
-
 </html>

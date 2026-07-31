@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokémon Details — Battle Companion</title>
+    <link rel="icon" type="image/svg+xml" href="../icons/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script type="module" src="../js/details.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <img src="../logo.png" alt="Poké Ball" />
+                <span>Pokédex</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.html" id="nav-compare">Compare</a></li>
+                    <li><a href="../index.html" id="nav-favorites">Favorites</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="../index.html" class="back-link">&larr; Back to Pokédex</a>
+
+        <section id="pokemon-detail"></section>
+
+        <section id="stats-section">
+            <h2>Base Stats</h2>
+            <div id="stats-display"></div>
+        </section>
+
+        <section id="evolution-section">
+            <h2>Evolution Chain</h2>
+            <div id="evolution-display"></div>
+        </section>
+
+        <section id="type-effectiveness-section">
+            <h2>Type Effectiveness</h2>
+            <div id="type-effectiveness"></div>
+        </section>
+
+        <section id="tcg-section">
+            <h2>Trading Cards</h2>
+            <div id="tcg-cards"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Edgar Tulcan — 2026</p>
+        </div>
+    </footer>
+</body>
+</html>
